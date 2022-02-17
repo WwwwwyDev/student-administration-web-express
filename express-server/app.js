@@ -43,5 +43,5 @@ app.use(function (req, res) {
 const config = require("./config")
 // 调用 app.listen 方法，指定端口号并启动web服务器
 app.listen(config.port, config.hostname, function () {
-  console.log(`api server running at ${config.hostname}:${config.port}`)
+  console.log(`server running at ${config.hostname}:${config.port}`)
 })
