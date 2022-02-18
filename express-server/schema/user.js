@@ -16,12 +16,19 @@ const password = joi
   .string()
   .pattern(/^(?=.*\d)(?=.*[a-zA-Z])[\da-zA-Z~!@#$%^&*]{6,18}$/)
   .required()
-
+const avatar = joi.string()
 // 注册和登录表单的验证规则对象
-exports.reg_login_schema = {
+exports.user_schema = [{
   // 表示需要对 req.body 中的数据进行验证
   body: {
     username,
     password,
+    avatar,
   },
-}
+},{
+  // 表示需要对 req.body 中的数据进行验证
+  body: {
+    password,
+    avatar
+  },
+}]

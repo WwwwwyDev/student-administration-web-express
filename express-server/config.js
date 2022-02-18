@@ -7,7 +7,8 @@ const config = {
         password: 'wwy123456',
         database: 'st_edu',
     },
-    defaultAvatar: 'http://file.wwywwy.top/FrKwEmE-0z5Ise5BjiINVdAocn6N' 
+    defaultAvatar: 'http://file.wwywwy.top/FrKwEmE-0z5Ise5BjiINVdAocn6N',
+    jwt: { secret: 'SJNDWKNKLADNALKWNWJLK', expiresIn: '10h' }
 }
 
 module.exports = config
