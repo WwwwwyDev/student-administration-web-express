@@ -5,5 +5,6 @@ module.exports = {
     FAIL : 300,
     NOVALID : 301,
     EXIST : 301,
-    NOPERMISSION : 401
+    NOPERMISSION : 401,
+    NOSUPERPERMISSION : 400
 }

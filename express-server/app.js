@@ -6,10 +6,13 @@ const app = express()
 const cors = require('cors')
 // 将 cors 注册为全局中间件
 app.use(cors())
+const fs=require('fs')
+if(!fs.existsSync('upload')) fs.mkdirSync(`upload`)
+app.use('/upload', express.static('./upload'))
 //配置解析 application/x-www-form-urlencoded 格式的表单数据的中间件
-app.use(express.urlencoded({ extended: false }))
+app.use(express.urlencoded({limit: '500kb', extended: false }))
 //配置解析 application/json 格式的表单数据的中间件
-app.use(express.json())
+app.use(express.json({limit: '500kb'}))
 // 导入配置文件
 const config = require('./config')
 
@@ -17,7 +20,7 @@ const config = require('./config')
 const expressJWT = require('express-jwt')
 
 // 使用 .unless({ path: [/^\/api\//] }) 指定哪些接口不需要进行 Token 的身份认证
-app.use(expressJWT({ secret: config.jwt.secret }).unless({ path: [/^\/api\//] }))
+app.use(expressJWT({ secret: config.jwt.secret }).unless({ path: [/^\/api\/|^\/upload\//] }))
 //配置自定义中间件
 const middleware = require('./middleware/errorwork.js')
 app.use(middleware.errorWork())

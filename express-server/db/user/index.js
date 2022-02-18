@@ -66,9 +66,15 @@ exports.getUsers = async (page, limit, username) => {
 }
 
 // 获取用户总数
-exports.getUsersTotal = async (page, limit, username) => {
-    let sql = "SELECT COUNT(*) FROM edu_admin_user"
-    let { err, results } = await query(sql)
+exports.getUsersTotal = async (username) => {
+    let sql = "SELECT COUNT(*) FROM edu_admin_user WHERE "
+    let content = []
+    if (username) {
+        sql = sql + " username like ? and "
+        content.push(`%${username}%`)
+    }
+    sql = sql + 'isdel = 0 '
+    let { err, results } = await query(sql, content)
     if (err) return { err, total: -1 }
     return { err: null, total: results[0]['COUNT(*)'] }
 }
