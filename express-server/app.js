@@ -20,7 +20,7 @@ const config = require('./config')
 const expressJWT = require('express-jwt')
 
 // 使用 .unless({ path: [/^\/api\//] }) 指定哪些接口不需要进行 Token 的身份认证
-app.use(expressJWT({ secret: config.jwt.secret }).unless({ path: [/^\/api\/|^\/upload\//] }))
+app.use(expressJWT({ secret: config.jwt.secret }).unless({ path: [/^(\/api\/)|^(\/upload\/)/] }))
 //配置自定义中间件
 const middleware = require('./middleware/errorwork.js')
 app.use(middleware.errorWork())

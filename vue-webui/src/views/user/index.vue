@@ -5,7 +5,7 @@
         <el-row>
           <el-col :span="4">
             <el-input
-              placeholder="请输入查找的用户名"
+              placeholder="搜索用户名"
               v-model.lazy="usernameSearchInput"
               clearable
             >
@@ -35,7 +35,10 @@
           highlight-current-row
           ><el-table-column label="头像" align="center">
             <template slot-scope="scope">
-              <el-avatar :size="50" :src="scope.row.avatar | avatarFilter"></el-avatar>
+              <el-avatar
+                :size="50"
+                :src="scope.row.avatar | avatarFilter"
+              ></el-avatar>
             </template>
           </el-table-column>
           <el-table-column label="用户名">
@@ -118,7 +121,11 @@
             :auto-upload="false"
             :on-change="changePhotoFile"
           >
-            <img v-if="addForm.avatar" :src="addForm.avatar | avatarFilter" class="avatar" />
+            <img
+              v-if="addForm.avatar"
+              :src="addForm.avatar | avatarFilter"
+              class="avatar"
+            />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
           <imageCropper ref="imageCropper" @getFile="getAddFile"></imageCropper>
@@ -157,7 +164,11 @@
             :auto-upload="false"
             :on-change="changePhotoFile"
           >
-            <img v-if="editForm.avatar" :src="editForm.avatar | avatarFilter" class="avatar" />
+            <img
+              v-if="editForm.avatar"
+              :src="editForm.avatar | avatarFilter"
+              class="avatar"
+            />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
           <imageCropper
@@ -177,16 +188,21 @@
 <script>
 import { getUsers, addUser, deleteUser, updateUser } from "@/api/user";
 import imageCropper from "@/components/ImageCropper";
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   components: {
     imageCropper,
   },
+  computed: {
+    ...mapGetters(["name"]),
+  },
   filters: {
     avatarFilter(avatar) {
-      if(/^(http|https):\/\/[\s\S]*/.test(avatar)) return avatar
-      if(/^(data):[\s\S]*/.test(avatar)) return avatar
-      return process.env.VUE_APP_BASE_API + "/upload/" + avatar
-    }
+      if (/^(http|https):\/\/[\s\S]*/.test(avatar)) return avatar;
+      if (/^(data):[\s\S]*/.test(avatar)) return avatar;
+      return process.env.VUE_APP_BASE_API + "/upload/" + avatar;
+    },
   },
   data() {
     return {
@@ -196,19 +212,16 @@ export default {
       limit: 5,
       usernameSearchInput: "",
       total: -1,
+      temp: {
+        id: -1,
+        username: "",
+        password: "",
+        avatar: "",
+      },
       addDialogVisible: false,
-      addForm: {
-        username: "",
-        password: "",
-        avatar: "",
-      },
+      addForm: null,
       editDialogVisible: false,
-      editForm: {
-        id: 0,
-        username: "",
-        password: "",
-        avatar: "",
-      },
+      editForm: null,
       FormRules: {
         password: [
           {
@@ -239,14 +252,15 @@ export default {
     };
   },
   created() {
-    this.fetchData({
-      page: this.page,
-      limit: this.limit,
-      username: this.usernameSearchInput,
-    });
+    this.addForm =  { ...this.temp, id: undefined }
+    this.editForm = { ...this.temp }
+    this.refreshAll();
   },
   methods: {
     async fetchData({ page, limit, username }) {
+      page = page || this.page;
+      limit = limit || this.limit;
+      username = username || this.usernameSearchInput;
       this.loading = true;
       let res = await getUsers(page, limit, username);
       this.usersInfo = res.data.users;
@@ -256,24 +270,21 @@ export default {
     searchUsername() {
       this.fetchData({
         page: 1,
-        limit: this.limit,
-        username: this.usernameSearchInput,
       });
       this.page = 1;
     },
+    refreshAll() {
+      this.fetchData({});
+    },
     handleSizeChange(limit) {
       this.fetchData({
-        page: this.page,
-        limit: limit,
-        username: this.usernameSearchInput,
+        limit,
       });
       this.limit = limit;
     },
     handleCurrentChange(page) {
       this.fetchData({
-        page: page,
-        limit: this.limit,
-        username: this.usernameSearchInput,
+        page,
       });
       this.page = page;
     },
@@ -283,33 +294,22 @@ export default {
         message: res.msg,
         type: "success",
       });
-      this.fetchData({
-        page: this.page,
-        limit: this.limit,
-        username: this.usernameSearchInput,
-      });
+      this.refreshAll();
     },
     clearAddForm() {
-      this.addForm.avatar ="";
-      this.addForm.username = "";
-      this.addForm.password = "";
+      this.addForm = {...this.temp, id: undefined}
     },
     clearEditForm() {
-      this.editForm.avatar = "";
-      this.editForm.username = "";
-      this.editForm.password = "";
+      this.editForm =  {...this.temp}
     },
     openAddDialog() {
       this.clearAddForm();
       this.addDialogVisible = true;
     },
-    openEditDialog(id, username, avatar, info) {
+    openEditDialog(id, username, avatar) {
       this.clearEditForm();
-      this.editForm.id = id;
-      this.editForm.avatar = avatar;
-      this.editForm.username = username;
-      this.editForm.password = "";
-      this.editDialogVisible = true;
+      this.editForm = {id, username, avatar, password: ""}
+      this.editDialogVisible = true
     },
     submitAddForm() {
       this.$refs["addForm"].validate(async (valid) => {
@@ -321,32 +321,24 @@ export default {
               type: "success",
             });
           this.addDialogVisible = false;
-          this.fetchData({
-            page: this.page,
-            limit: this.limit,
-            username: this.usernameSearchInput,
-          });
+          this.refreshAll()
         }
       });
     },
     submitEditForm() {
       this.$refs["editForm"].validate(async (valid) => {
         if (valid) {
-        let res = await updateUser(this.editForm);
-        if (res.code === 200)
-          this.$message({
-            message: res.msg,
-            type: "success",
-          });
-        this.editDialogVisible = false;
-        this.fetchData({
-          page: this.page,
-          limit: this.limit,
-          username: this.usernameSearchInput,
-        });
+          let res = await updateUser(this.editForm);
+          if (res.code === 200)
+            this.$message({
+              message: res.msg,
+              type: "success",
+            });
+          if (this.editForm.username == this.name) this.getInfo();
+          this.editDialogVisible = false;
+          this.refreshAll();
         }
       });
-      
     },
     changePhotoFile(file, fileList) {
       if (fileList.length > 0) {
@@ -381,9 +373,9 @@ export default {
     async getAddFile(file) {
       let reader = new FileReader();
       reader.readAsDataURL(file);
-      var _this = this
+      var _this = this;
       reader.onload = function () {
-        _this.addForm.avatar = reader.result
+        _this.addForm.avatar = reader.result;
       };
       // this.addForm.avatar = window.URL.createObjectURL(file);
       this.$refs.imageCropper.close();
@@ -392,13 +384,16 @@ export default {
     async getEditFile(file) {
       let reader = new FileReader();
       reader.readAsDataURL(file);
-      var _this = this
+      var _this = this;
       reader.onload = function () {
-        _this.editForm.avatar = reader.result
+        _this.editForm.avatar = reader.result;
       };
       // this.editForm.avatar = window.URL.createObjectURL(file);
       this.$refs.imageCropper.close();
     },
+    ...mapActions({
+      getInfo: "user/getInfo", // 将 `this.add_cart()` 映射为 `this.$store.dispatch('add_cart')`
+    }),
   },
 };
 </script>

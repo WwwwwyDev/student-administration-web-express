@@ -94,6 +94,26 @@ export default {
     }
   },
   methods: {
+      verify(){
+        this.captch(this)
+      },
+      captch(that) {
+        let appid = '2074448262'; // 腾讯云控制台中对应这个项目的 appid
+        //生成一个滑块验证码对象
+        let captcha = new TencentCaptcha(appid, function(res) {
+          // 用户滑动结束或者关闭弹窗，腾讯返回的内容
+          //console.log(res.ret)
+          if (res.ret === 0) {
+            //成功，传递数据给后台进行验证
+            that.handleLogin()
+          } else {
+            // 提示用户完成验证
+            that.$message.error("请完成验证");
+          }
+        });
+        // 滑块显示
+        captcha.show();
+      },
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
