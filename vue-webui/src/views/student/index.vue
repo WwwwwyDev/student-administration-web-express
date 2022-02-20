@@ -336,6 +336,7 @@ export default {
       page = page || this.page;
       limit = limit || this.limit;
       num = num || this.searchNumInput;
+      name = name || this.searchNameInput
       grade = grade || this.searchGradeInput;
       _class = _class || this.searchClassInput;
       sex = sex || this.selectSexInput;

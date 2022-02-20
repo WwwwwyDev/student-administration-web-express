@@ -40,6 +40,9 @@ exports.getUsers = async (req, res) => {
 // 更新用户
 exports.updateUser = async (req, res) => {
     if (req.user.username != "superadmin") return res.send({ code: R.NOSUPERPERMISSION, msg: "你不是超级管理员" })
+    var { err, isExist } = await userService.isExistUserByID(req.params.id)
+    if (err) return res.cc(err)
+    if (!isExist) return res.send({ code: R.EXIST, msg: "用户不存在" })
     let user = req.body
     user.password = bcrypt.hashSync(user.password, 10)
     if (!/^(http|https):\/\/[\s\S]*/.test(user.avatar)) {

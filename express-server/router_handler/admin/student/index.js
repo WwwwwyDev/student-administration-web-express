@@ -28,6 +28,9 @@ exports.getStudents = async (req, res) => {
 // 更新学生
 exports.updateStudent = async (req, res) => {
     // if(!req.body.num) return res.send({ code: R.NOVALID, msg: "学号为必填项" })
+    var { err, isExist } = await studentService.isExistStudentByID(req.params.id)
+    if (err) return res.cc(err)
+    if (!isExist) return res.send({ code: R.EXIST, msg: "学生不存在" })
     let student = req.body
     student = { ...student, id: req.params.id }
     var { err, isSuccess } = await studentService.updateStudent(student)
@@ -43,7 +46,7 @@ exports.updateStudent = async (req, res) => {
 exports.delStudent = async (req, res) => {
     var { err, isExist } = await studentService.isExistStudentByID(req.params.id)
     if (err) return res.cc(err)
-    if (!isExist) return res.send({ code: R.EXIST, msg: "用户不存在" })
+    if (!isExist) return res.send({ code: R.EXIST, msg: "学生不存在" })
     var { err, isSuccess } = await studentService.delStudent(req.params.id)
     if (err) return res.cc(err)
     if (isSuccess) {

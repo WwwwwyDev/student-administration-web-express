@@ -1,5 +1,5 @@
 const query = require('../mysql')
-const config = require(`${process.cwd()}/config`)
+// const config = require(`${process.cwd()}/config`)
 
 
 exports.isExistStudentByNum = async (num) => {
