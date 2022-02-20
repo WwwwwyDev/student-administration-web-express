@@ -39,4 +39,5 @@
 - [腾讯云T-Sec 天御验证码](https://cloud.tencent.com/product/captcha)
 
 #### 图片预览
-
+![输入图片说明](pic/1.png)
+![输入图片说明](pic/2.png)
