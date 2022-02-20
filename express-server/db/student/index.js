@@ -20,10 +20,10 @@ exports.isExistStudentByID = async (id) => {
 
 
 exports.getStudentByNumLike = async (num) => {
-    const sql = `select * from edu_student where student_num like ?`
-    let { err, results } = await query(sql, `%${num}%`)
-    if (err) return { err, student: null }
-    return { err: null, student: results }
+    const sql = `select id,student_num from edu_student where student_num like ? and isdel=0`
+    let { err, results } = await query(sql, `${num}%`)
+    if (err) return { err, students: null }
+    return { err: null, students: results }
 }
 
 

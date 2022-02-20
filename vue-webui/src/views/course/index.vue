@@ -139,7 +139,7 @@
       </span>
     </el-dialog>
 
-    <el-dialog title="编辑学生" :visible.sync="editDialogVisible" width="500px">
+    <el-dialog title="编辑课程" :visible.sync="editDialogVisible" width="500px">
       <el-form
         :model="editForm"
         ref="editForm"
@@ -147,7 +147,7 @@
         @submit.native.prevent
         :rules="FormRules"
       >
-        <el-form-item label="课程号" prop="num">
+        <el-form-item label="课程号">
           <el-input placeholder="请输入课程号" v-model="editForm.num" clearable  :disabled="true">
           </el-input>
         </el-form-item>

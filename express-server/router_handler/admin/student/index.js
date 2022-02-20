@@ -55,3 +55,10 @@ exports.delStudent = async (req, res) => {
         return res.send({ code: R.FAIL, msg: "删除失败" })
     }
 }
+
+// 通过学号远程搜索学生
+exports.searchStudentByNum = async (req, res) => {
+    var { err, students } = await studentService.getStudentByNumLike(req.params.num)
+    if (err) return res.cc(err)
+    return res.send({ code: R.SUCCESS, data: { students }, msg: "搜索成功" })
+}

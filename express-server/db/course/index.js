@@ -20,10 +20,10 @@ exports.isExistCourseByID = async (id) => {
 
 
 exports.getCourseByNumLike = async (num) => {
-    const sql = `select * from edu_course where course_num like ?`
-    let { err, results } = await query(sql, `%${num}%`)
-    if (err) return { err, course: null }
-    return { err: null, course: results }
+    const sql = `select id,course_num from edu_course where course_num like ?`
+    let { err, results } = await query(sql, `${num}%`)
+    if (err) return { err, courses: null }
+    return { err: null, courses: results }
 }
 
 

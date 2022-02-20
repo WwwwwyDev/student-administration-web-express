@@ -1,6 +1,6 @@
 const courseService = require(`${process.cwd()}/db/course`)
 const R = require(`${process.cwd()}/util/code`)
-// 添加学生
+// 添加课程
 exports.addCourse = async (req, res) => {
     if(!req.body.num) return res.send({ code: R.NOVALID, msg: "课程号为必填项" })
     let course = req.body
@@ -16,7 +16,7 @@ exports.addCourse = async (req, res) => {
     }
 }
 
-// 分页查询学生
+// 分页查询课程
 exports.getCourses = async (req, res) => {
     var { err, courses } = await courseService.getCourses(req.query.page, req.query.limit, req.query.num,req.query.name,req.query.teacher)
     if (err) return res.cc(err)
@@ -25,7 +25,7 @@ exports.getCourses = async (req, res) => {
     return res.send({ code: R.SUCCESS, data: { courses, total }, msg: "查询成功" })
 }
 
-// 更新学生
+// 更新课程
 exports.updateCourse = async (req, res) => {
     // if(!req.body.num) return res.send({ code: R.NOVALID, msg: "学号为必填项" })
     var { err, isExist } = await courseService.isExistCourseByID(req.params.id)
@@ -42,7 +42,7 @@ exports.updateCourse = async (req, res) => {
     }
 }
 
-// 删除学生
+// 删除课程
 exports.delCourse = async (req, res) => {
     var { err, isExist } = await courseService.isExistCourseByID(req.params.id)
     if (err) return res.cc(err)
@@ -54,4 +54,11 @@ exports.delCourse = async (req, res) => {
     } else {
         return res.send({ code: R.FAIL, msg: "删除失败" })
     }
+}
+
+// 通过课程号远程搜索课程
+exports.searchCourseByNum = async (req, res) => {
+    var { err, courses } = await courseService.getCourseByNumLike(req.params.num)
+    if (err) return res.cc(err)
+    return res.send({ code: R.SUCCESS, data: { courses }, msg: "搜索成功" })
 }

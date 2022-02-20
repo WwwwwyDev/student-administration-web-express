@@ -8,7 +8,7 @@ router.get('/',courseHandler.getCourses)
 router.post('/',courseHandler.addCourse)
 router.delete('/:id',courseHandler.delCourse)
 router.put('/:id',courseHandler.updateCourse)
-
+router.get('/searchNum/:num',courseHandler.searchCourseByNum)
 
 // 将路由对象共享出去
 module.exports = router

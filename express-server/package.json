@@ -19,6 +19,7 @@
     "joi": "^17.6.0",
     "jsonwebtoken": "8.5.1",
     "mysql": "2.18.1",
+    "silly-datetime": "^0.1.2",
     "string-random": "^0.1.3"
   }
 }
