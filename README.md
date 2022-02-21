@@ -17,7 +17,7 @@
 3.  在后端目录下使用`node app.js`运行后端
 4. 修改前端的.env.development 和 .env.production 和 .env.staging文件中的api接口地址
 5. 在前端目录下使用`yarn run dev`运行前端开发环境，使用`yarn build:prod`编译生产环境
-
+6. 若在开发环境下，可以使用`nodemon app.js`进行热部署，若在生产环境下，可以使用`pm2 start app.js`来守护进程
 #### 技术栈
 
 ##### 持久化
