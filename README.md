@@ -1,4 +1,4 @@
-#### student-administration-web
+# student-administration-web
 
 #### 介绍
 基于nodejs+vue2的学生成绩管理系统
