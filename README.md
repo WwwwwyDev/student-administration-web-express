@@ -3,8 +3,6 @@
 #### 介绍
 基于nodejs+vue2的学生成绩管理系统
 
-[在线预览](http://admins.wwywwy.top/)
-
 [api文档](https://docs.apipost.cn/preview/83589b6c06410557/ac98ad07a20b77d3)
 
 #### er图
